@@ -13,3 +13,9 @@ editing, if necessary.
 This will require a deep understanding of vector representations of words and frames in corpora, as well as 
 recurrent neural networks, which are often used for word prediction. We hope to uncover evidence that the
 hypothesized conceptual networks of metaphor are expressed by the learned network itself.
+
+We are at the very first stages of development. So far this repository just
+contains an edited version of 
+[the TensorFlow tutorial's `word2vec_basic.py`](https://www.tensorflow.org/versions/r0.12/tutorials/word2vec/)
+and [an iPython Notebook](word2vecDemo.ipynb) that shows a high-level usage
+of word2vec.
