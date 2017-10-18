@@ -1,4 +1,4 @@
-# MATH 292 Fall 2017 -- Final Project
+# MATH 292 Fall 2017 UC Merced -- Final Project
 
 ## Led by Prof. Harish Bhat
 
