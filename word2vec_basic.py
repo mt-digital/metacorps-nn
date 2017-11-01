@@ -61,12 +61,6 @@ def read_data(filename):
     data = tf.compat.as_str(f.read(f.namelist()[0])).split()
   return data
 
-# vocabulary = read_data(filename)
-# print('Data size', len(vocabulary))
-
-# Step 2: Build the dictionary and replace rare words with UNK token.
-# vocabulary_size = 50000
-
 
 def build_dataset(words, n_words):
   """Process raw inputs into a dataset."""
@@ -183,7 +177,8 @@ def run_word2vec(
                          labels=train_labels,
                          inputs=embed,
                          num_sampled=num_sampled,
-                         num_classes=vocabulary_size))
+                         num_classes=vocabulary_size)
+          )
 
       # Construct the SGD optimizer using a learning rate of 1.0.
       optimizer = tf.train.GradientDescentOptimizer(1.0).minimize(loss)
@@ -239,10 +234,11 @@ def run_word2vec(
               close_word = reverse_dictionary[nearest[k]]
               log_str = '%s %s,' % (log_str, close_word)
             print(log_str)
+
       final_embeddings = normalized_embeddings.eval()
 
-# Step 6: Visualize the embeddings.
 
+###### BEGIN VISUALIZATION CODE #######
 
 # pylint: disable=missing-docstring
 # Function to draw visualization of distance between embeddings.
