@@ -39,20 +39,3 @@ The code [prepare_viomet_corpora.py](prepare_viomet_corpora.py) reads the
 transcripts from the database into a single text file, cleaning up along the
 way. This text file is then compressed and stored on a server for remote
 access for any user. 
-
-This text processing has already been done, though there is one issue currently:
-the commercials are not being removed. So, "chantix" is showing up as a word
-associated with "trump," for example. Commercials have been removed before in
-another project--this is fixable. 
-
-To test the current version, use the `demo_word2vec` function in
-`word2vec_basic.py` like so:
-
-```python
-from word2vec_basic import demo_word2vec
-
-# W stands for "west"; code will automatically fetch relevant dataset.
-demo_word2vec('MSNBCW')
-demo_word2vec('CNNW')
-demo_word2vec('FOXNEWSW')
-```
