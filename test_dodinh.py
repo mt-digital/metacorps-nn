@@ -1,4 +1,4 @@
-from dodinh import get_window
+from util import get_window
 
 from nose.tools import eq_
 
