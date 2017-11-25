@@ -110,4 +110,3 @@ tokens using word embeddings from the Google News word embeddings
 ([1.65 GB download](https://doc-08-3o-docs.googleusercontent.com/docs/securesc/nsvfebu7ik236iadibqld9mq9669rtgt/vgklkerbosnf2rf2ic56jvo3rqime6rd/1511042400000/06848720943842814915/13496840407080918705/0B7XkCwpI5KDYNlNUTTlSS21pQmM?e=download)).
 This is done in [util.py](/util.py) with a test of windowing in 
 [test_util.py](/test_util.py). More tests should be added here.
-
