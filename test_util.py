@@ -28,4 +28,4 @@ def test_get_window():
 
     text = 'he beat his opponent'
     window = get_window(text, word, window_size)
-    eq_(window, None)
+    eq_(window, ['he', 'beat', 'his', 'opponent', '', '', '', '', '', '', ''])
