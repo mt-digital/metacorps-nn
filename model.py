@@ -106,7 +106,3 @@ def train_network(w2v_model, training_data, model_save_path, n_outputs=2,
         saver.save(sess, model_save_path)
 
     return X, logits
-
-
-def test_network(test_data, model_initializer, model_saver, training_op):
-    pass

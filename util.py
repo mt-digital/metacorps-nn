@@ -153,29 +153,38 @@ class MetaphorData:
         # num_validation = len(_validation)
         num_test = len(_test)
 
+        # Build training and validation embeddings.
         train_embeddings = (
             _make_sentence_embedding(row[0], row[1], self.wv, self.window_size)
             for row in _train[['text', 'word']].as_matrix()
         )
-
         validation_embeddings = (
             _make_sentence_embedding(row[0], row[1], self.wv, self.window_size)
             for row in _validation[['text', 'word']].as_matrix()
         )
-
-        test_embeddings = (
-            _make_sentence_embedding(row[0], row[1], self.wv, self.window_size)
-            for row in _test[['text', 'word']].as_matrix()
-        )
+        # Wrap training and validation embeddings and their labels with
+        # MetaphorDataTrain class.
 
         self.train = MetaphorDataTrain(
             train_embeddings, _train.is_metaphor.as_matrix(), num_train,
             (validation_embeddings, _validation.is_metaphor)
         )
-
-        self.test = MetaphorDataTest(
-            test_embeddings, _test.is_metaphor.as_matrix(), num_test
+        # Create the test sentence embeddings.
+        # import ipdb
+        # ipdb.set_trace()
+        test_embeddings = (
+            _make_sentence_embedding(row[0], row[1], self.wv, self.window_size)
+            for row in _test[['text', 'word']].as_matrix()
         )
+        # Initialize the test data object.
+        self.test = MetaphorDataTest(
+            test_embeddings, _test.is_metaphor.as_matrix(), num_test,
+        )
+        # Add information about the original sentences, words, and labels.
+        self.test.add_original(_test)
+
+        # import ipdb
+        # ipdb.set_trace()
 
         return self.train, self.test
 
@@ -232,10 +241,11 @@ class MetaphorDataTrain:
         self.suitable_start = [
             i for i in range(1, num_examples) if num_examples % i != 0
         ]
-        self.is_metaphor_vec = is_metaphor_vec
-        self.embedded_sentences = embedded_sentences
-        self.embedded_sentences_cycle = itertools.cycle(embedded_sentences)
-        self.is_metaphor_cycle = itertools.cycle(is_metaphor_vec)
+        self.is_metaphor_vec = np.array(list(is_metaphor_vec))
+        self.embedded_sentences = np.array(list(embedded_sentences))
+        self.embedded_sentences_cycle = \
+            itertools.cycle(self.embedded_sentences)
+        self.is_metaphor_cycle = itertools.cycle(self.is_metaphor_vec)
         if validation_set is not None:
             self.validation_embeddings = validation_set[0]
             self.validation_labels = validation_set[1]
@@ -274,6 +284,24 @@ class MetaphorDataTrain:
 class MetaphorDataTest(MetaphorDataTrain):
 
     def __init__(self, embedded_test_sentences, is_metaphor_vec, num_examples):
+
         super().__init__(
             embedded_test_sentences, is_metaphor_vec, num_examples
         )
+
+        self.text_sentences = None
+        self.predicted_is_metaphor_vec = None
+
+    def add_original(self, test_df):
+        '''
+
+        Arguments:
+            test_df (pandas.DataFrame): table with original sentences
+                and other metadata in same row order as the test
+                embeddings and test labels.
+        '''
+        self.text_sentences = test_df['text']
+        self.word = test_df['word']
+
+    def add_predictions(self, predicted_is_metaphor_vec):
+        self.predicted_is_metaphor_vec = predicted_is_metaphor_vec
