@@ -74,7 +74,8 @@ def train_network(w2v_model, training_data, model_save_path, n_outputs=2,
         loss = tf.reduce_mean(xentropy, name='loss')
 
     with tf.name_scope('train'):
-        optimizer = tf.train.GradientDescentOptimizer(learning_rate)
+        # optimizer = tf.train.GradientDescentOptimizer(learning_rate)
+        optimizer = tf.train.MomentumOptimizer(learning_rate, 0.9)
         training_op = optimizer.minimize(loss)
 
     with tf.name_scope('eval'):

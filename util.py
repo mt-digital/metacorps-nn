@@ -146,7 +146,13 @@ class MetaphorData:
         self.test_ratio = 1 - train_ratio - validation_ratio
         self.window_size = window_size
 
-    def split_train_test(self):
+    def split_train_test(self, **attr_updates):
+        '''
+        Create a fresh set of training/test data using current attributes as
+        parameters.
+        '''
+        for key in attr_updates:
+            setattr(self, key, attr_updates[key])
 
         _train, _validation, _test = self._split()
         num_train = len(_train)
@@ -164,14 +170,11 @@ class MetaphorData:
         )
         # Wrap training and validation embeddings and their labels with
         # MetaphorDataTrain class.
-
         self.train = MetaphorDataTrain(
             train_embeddings, _train.is_metaphor.as_matrix(), num_train,
             (validation_embeddings, _validation.is_metaphor)
         )
         # Create the test sentence embeddings.
-        # import ipdb
-        # ipdb.set_trace()
         test_embeddings = (
             _make_sentence_embedding(row[0], row[1], self.wv, self.window_size)
             for row in _test[['text', 'word']].as_matrix()
@@ -183,12 +186,9 @@ class MetaphorData:
         # Add information about the original sentences, words, and labels.
         self.test.add_original(_test)
 
-        # import ipdb
-        # ipdb.set_trace()
-
         return self.train, self.test
 
-    def _split(self):
+    def _split(self, random_seed=42):
 
         df = self.data_frame
         n_rows = len(df)
@@ -203,11 +203,35 @@ class MetaphorData:
         validation_indexes = train_indexes[-n_validation:]
         train_indexes = train_indexes[:-n_validation]
 
-        # This will be length len(n_rows) - len(n_train).
-        test_indexes = list(set(self.data_frame.index) - set(train_indexes))
+        # Count number of metaphors in training selection.
+        train_df = df.iloc[train_indexes]
+        # Should be int but this doesn't hurt.
+        n_metaphor = int(df.is_metaphor.sum())
+
+        # Need to sample with replacement to build balanced training dataset.
+        n_to_sample = n_train - (2 * n_metaphor)
+        metaphor_rows = df[df.is_metaphor == 1]
+
+        if random_seed is not None:
+            np.random.seed(random_seed)
+
+        sample_indexes = np.random.choice(range(n_metaphor), n_to_sample)
+        metaphor_rows.reset_index()
+
+        train_df = train_df.append(
+            metaphor_rows.iloc[sample_indexes],
+            ignore_index=True
+        )
+
+        # This will be random order, length = len(n_rows) - len(n_train).
+        test_indexes = list(
+            set(self.data_frame.index)
+            - set(train_indexes)
+            - set(validation_indexes)
+        )
 
         return (
-            df.iloc[train_indexes],
+            train_df,
             df.iloc[validation_indexes],
             df.iloc[test_indexes]
         )
@@ -258,19 +282,21 @@ class MetaphorDataTrain:
 
     def next_batch(self, batch_size):
 
+        # Randomize in-batch order.
+        sel_idx = np.random.permutation(batch_size)
         embed_batch = np.array(list(
             itertools.islice(
                 self.embedded_sentences_cycle, self.start,
                 self.start + batch_size
             )
-        ))
+        ))[sel_idx]
 
         is_metaphor_batch = np.array(list(
             itertools.islice(
                 self.is_metaphor_cycle, self.start,
                 self.start + batch_size
             )
-        ))
+        ))[sel_idx]
 
         return embed_batch, is_metaphor_batch
 
@@ -294,14 +320,19 @@ class MetaphorDataTest(MetaphorDataTrain):
 
     def add_original(self, test_df):
         '''
+        Add the original test dataframe to the object.
 
         Arguments:
             test_df (pandas.DataFrame): table with original sentences
                 and other metadata in same row order as the test
                 embeddings and test labels.
+
+        Returns:
+            None
         '''
         self.text_sentences = test_df['text']
         self.word = test_df['word']
+        self.test_df = test_df
 
     def add_predictions(self, predicted_is_metaphor_vec):
         self.predicted_is_metaphor_vec = predicted_is_metaphor_vec

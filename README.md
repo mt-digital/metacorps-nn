@@ -17,6 +17,40 @@ if necessary.
 
 ## Usage
 
+### Create and evaluate a model
+
+The `ModelRun` class in `modelrun.py` enables hyperparameter tuning and model
+evaluation via the `Eval` class in `eval.py`. When a new model is run, a
+checkpoint is saved with its parameter settings as the filename once the 
+model has completed its training.
+Each instance of `ModelRun` gets its own UUID-by-default directory in the 
+`modelruns` directory. So this is our rudimentary hyperparameter tuning tool.
+
+Example (see [modelrun.py](/modelrun.py) for more):
+
+```python
+
+from modelrun import ModelRun
+
+# Set up a model run with one 300-node hidden layer, otherwise default args.
+mr = ModelRun(n_hidden=[300], limit_word2vec=200000)  # limit word vec dct size
+eval1 = mr.run(n_epochs=40)
+
+# Now set model to have two hidden layers, with 300 and 150 nodes each.
+mr.n_hidden = [300, 150]
+eval2 = mr.run()
+
+# Change activation function. Default is ReLU. Still [300, 150] hidden layers.
+mr.activation = tf.nn.selu
+eval_selu = mr.run()
+
+# Calculate a number of metrics for these model tests.
+print(eval_selu.accuracy)
+print(eval_selu.precision_score)
+print(eval_selu.recall_score)
+print(eval_selu.confusion_matrix)
+```
+
 ### Loading data
 
 ```python

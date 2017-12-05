@@ -14,7 +14,7 @@ CLIENT = MongoClient()
 
 
 def make_csv(project_name='Viomet Sep-Nov 2012',
-             output_path='augmented_2012.csv',
+             output_path='viomet-2012.csv',
              random_seed=42):
     '''
     Keep random_seed=42 to reproduce results in paper.
@@ -56,30 +56,35 @@ def make_csv(project_name='Viomet Sep-Nov 2012',
         columns=['word', 'reference_url', 'text', 'is_metaphor']
     )
 
-    # now sample with replacement to get a balanced dataset
-    n_metaphor = data['is_metaphor'].sum()
-    n_rows = len(data)
-    n_to_sample = n_rows - (2 * n_metaphor)
-    print(
-        (
-            '{} out of {} are metaphor. '
-            'Adding {} more rows by sampling with replacement for a total '
-            'number of {} rows.'
-        ).format(n_metaphor, n_rows, n_to_sample, n_to_sample + n_rows)
-    )
-
-    metaphor_rows = data[data.is_metaphor == 1]
-
-    np.random.seed()
-    indexes_to_sample = np.random.choice(range(n_metaphor), n_to_sample)
-
-    augmentation = metaphor_rows.iloc[indexes_to_sample]
-
-    data = data.append(augmentation, ignore_index=True)
-
     data.to_csv(output_path, index=False)
 
     return data
+
+    # XXX removing XXX
+    # now sample with replacement to get a balanced dataset
+    # n_metaphor = data['is_metaphor'].sum()
+    # n_rows = len(data)
+    # n_to_sample = n_rows - (2 * n_metaphor)
+    # print(
+    #     (
+    #         '{} out of {} are metaphor. '
+    #         'Adding {} more rows by sampling with replacement for a total '
+    #         'number of {} rows.'
+    #     ).format(n_metaphor, n_rows, n_to_sample, n_to_sample + n_rows)
+    # )
+
+    # metaphor_rows = data[data.is_metaphor == 1]
+
+    # np.random.seed()
+    # indexes_to_sample = np.random.choice(range(n_metaphor), n_to_sample)
+
+    # augmentation = metaphor_rows.iloc[indexes_to_sample]
+
+    # data = data.append(augmentation, ignore_index=True)
+
+    # data.to_csv(output_path, index=False)
+
+    # return data
 
 
 def _replacements(text):
