@@ -1,0 +1,15 @@
+#! /bin/bash
+#$ -S /bin/bash
+#$ -q fast.q
+#$ -cwd
+#$ -j y
+#$ -V
+#$ -l mem_free=96G
+#$ -pe smp 20
+#$ -N run-n_layers
+#$ -o run-n_layers.log
+
+source activate tf
+python n_layers_experiment.py $RUN_DIRECTORY $LEARNING_RATE
+
+printf "\nJob finished at `uptime`\n"

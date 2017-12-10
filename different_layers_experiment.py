@@ -22,11 +22,13 @@ mr = ModelRun(run_directory=run_directory,
               w2v_model_loc=w2v_model_loc,
               learning_rate=learning_rate)
 
-for idx, n_hidden_layers in enumerate([1] + list(range(2, 9, 2))):
+layer_sizes = [500, 300, 150, 100, 50]
+for idx in range(1, len(layer_sizes) + 1):  # , n_hidden_layers in enumerate([1] + list(range(2, 9, 2))):
 
     # Parameter specifying number of 500-node hidden layers.
     # Confusing name, TODO change to hidden_layers all the way down.
-    mr.n_hidden = [n_nodes for _ in range(n_hidden_layers)]
+    # mr.n_hidden = [n_nodes for _ in range(n_hidden_layers)]
+    mr.n_hidden = layer_sizes[:idx]
     if verbose:
         print('Running with mr.n_hidden =', mr.n_hidden)
     ev = mr.run(n_epochs=120, verbose=verbose, early_stopping_limit=25)

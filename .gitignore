@@ -6,3 +6,7 @@ text*
 *-*-*-*
 *.tex
 modelruns
+.*
+*.log
+__pycache__
+GoogleNews-vectors-negative300.bin
