@@ -40,8 +40,24 @@ class Eval:
             (self.test_data.is_metaphor_vec == 1)
         ]
 
-        self.true = self.test_data.predicted_is_metaphor_vec
-        self.pred = self.test_data.is_metaphor_vec
+        self.true = self.test_data.is_metaphor_vec
+        self.pred = self.test_data.predicted_is_metaphor_vec
+
+        # Compute performance measures.
+        # http://scikit-learn.org/stable/modules/model_evaluation.html
+        self.confusion_matrix = \
+            skmetrics.confusion_matrix(self.true, self.pred)
+
+        tn, fp, fn, tp = self.confusion_matrix.ravel()
+
+        self.accuracy = (tp + tn) / (tp + tn + fp + fn)
+        self.precision = tp / (tp + fp)    # how often a positive is true pos.
+        self.sensitivity = tp / (tp + fn)  # recall, true positive rate
+        self.specificity = tn / (tn + fp)  # true negative rate
+
+        self.auc = skmetrics.roc_auc_score(
+            self.true, self.test_data.probabilities[:, 1]
+        )
 
     def word_counts(self, n_most_common=10):
         '''
@@ -72,27 +88,3 @@ class Eval:
                 'true_positives'
             ]
         }
-
-    @property
-    def confusion_matrix(self):
-        '''
-        Returns:
-            (numpy.ndarray): 2D confusion matrix using true/pred is_metaphor
-
-        Example:
-            >>> eval_inst = Eval(test_data)
-            >>> tp, fp, fn, tn = eval_isnt.confusion_matrix()
-        '''
-        return skmetrics.confusion_matrix(self.true, self.pred)
-
-    @property
-    def accuracy(self):
-        return skmetrics.accuracy_score(self.true, self.pred)
-
-    @property
-    def precision_score(self):
-        return skmetrics.precision_score(self.true, self.pred)
-
-    @property
-    def recall_score(self):
-        return skmetrics.recall_score(self.true, self.pred)

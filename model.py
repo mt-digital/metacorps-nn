@@ -13,9 +13,10 @@ import tensorflow as tf
 
 
 def train_network(w2v_model, training_data, model_save_path, n_outputs=2,
-                  n_hidden=[300], context_window=5, learning_rate=0.5,
-                  activation=tf.nn.relu,
-                  n_epochs=40, batch_size=50):
+                  n_hidden=[300], context_window=5, learning_rate=1.5,
+                  activation=tf.nn.relu, use_dropout=True, dropout_rate=0.5,
+                  input_dropout_rate=0.8, n_epochs=40, batch_size=50,
+                  early_stopping_limit=10, verbose=True):
     '''
     Arguments:
         w2v_model (gensim.models.word2vec): Gensim wrapper of the word2vec
@@ -45,26 +46,35 @@ def train_network(w2v_model, training_data, model_save_path, n_outputs=2,
     X = tf.placeholder(tf.float32, shape=(None, n_inputs), name='X')
     y = tf.placeholder(tf.int64, shape=(None), name='y')
 
-    layers = []
+    training = tf.placeholder_with_default(False, shape=(), name='training')
+
+    if use_dropout:
+        X_drop = tf.layers.dropout(X, input_dropout_rate, training=training)
+
+    # Track the previous layer to connect the next layer.
+    prev_layer = None
     with tf.name_scope('dnn'):
-
         for idx, n in enumerate(n_hidden):
-
             name = 'hidden' + str(idx)
             if idx == 0:
-                layers.append(
-                    tf.layers.dense(
-                        X, n, name=name, activation=activation
-                    )
+                if use_dropout:
+                    X_ = X_drop
+                else:
+                    X_ = X
+
+                prev_layer = tf.layers.dense(
+                    X_, n, name=name, activation=activation
                 )
             else:
-                layers.append(
-                    tf.layers.dense(
-                        layers[idx - 1], n, name=name, activation=activation
-                    )
+                prev_layer = tf.layers.dense(
+                    prev_layer, n, name=name, activation=activation
                 )
-
-        logits = tf.layers.dense(layers[-1], n_outputs, name='outputs')
+            if use_dropout:
+                do_name = 'dropout' + str(idx)
+                prev_layer = tf.layers.dropout(
+                    prev_layer, dropout_rate, training=training, name=do_name
+                )
+        logits = tf.layers.dense(prev_layer, n_outputs, name='outputs')
 
     # Currently this is coming from the TF book Ch 10.
     with tf.name_scope('loss'):
@@ -81,6 +91,7 @@ def train_network(w2v_model, training_data, model_save_path, n_outputs=2,
     with tf.name_scope('eval'):
         correct = tf.nn.in_top_k(logits, y, 1)
         accuracy = tf.reduce_mean(tf.cast(correct, tf.float32))
+        probabilities = tf.nn.softmax(logits, name="softmax_tensor")
 
     init = tf.global_variables_initializer()
     saver = tf.train.Saver()
@@ -90,20 +101,42 @@ def train_network(w2v_model, training_data, model_save_path, n_outputs=2,
     with tf.Session() as sess:
         init.run()
 
+        # Initialize early stopping parameters.
+        acc_val_best = -1.0  # So initial accuracy always better.
+        n_since_winner = 0
         for epoch in range(n_epochs):
 
             training_data.shuffle()
 
             for iteration in range(training_data.num_examples // batch_size):
                 X_batch, y_batch = training_data.next_batch(batch_size)
-                sess.run(training_op, feed_dict={X: X_batch, y: y_batch})
+                sess.run(
+                    training_op,
+                    feed_dict={X: X_batch, y: y_batch, training: True}
+                )
 
             acc_train = accuracy.eval(feed_dict={X: X_batch, y: y_batch})
             acc_val = accuracy.eval(feed_dict={X: X_validate, y: y_validate})
+            if acc_val > acc_val_best:
+                n_since_winner = 0
+                acc_val_best = acc_val
+                saver.save(sess, model_save_path)
+                if verbose:
+                    print('Have a new winner: acc_val_best=', acc_val_best)
+            else:
+                n_since_winner += 1
+                if verbose:
+                    print(n_since_winner, " since winner")
 
-            print(epoch, 'Train accuracy: ', acc_train,
-                  ' Validation accuracy: ', acc_val)
+            if n_since_winner > early_stopping_limit:
+                break
 
-        saver.save(sess, model_save_path)
+            if verbose:
+                print(
+                    epoch, 'Train accuracy: ', acc_train,
+                           ' Validation accuracy: ', acc_val
+                )
 
-    return X, logits
+#         saver.save(sess, model_save_path)
+
+    return X, probabilities, logits

@@ -4,3 +4,5 @@ text*
 *.csv
 *ckpt*
 *-*-*-*
+*.tex
+modelruns

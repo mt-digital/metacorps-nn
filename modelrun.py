@@ -52,8 +52,8 @@ class ModelRun:
         '''
 
         Arguments:
-            limit_word2vec (bool): number of embeddings to load from the
-                model loaded from `w2v_model_loc`
+            limit_word2vec (bool/int): number of embeddings to load from the
+                model loaded from `w2v_model_loc`; false if no limit
         '''
         self.labelled_data_loc = labelled_data_loc
         self.n_hidden = n_hidden
@@ -64,28 +64,28 @@ class ModelRun:
         self.activation = activation
         self.run_directory = run_directory
 
-        try:
-            if 'GoogleNews' in w2v_model_loc:
-                print(
-                    'loading GoogleNews word2vec embeddings, takes a minute...'
-                )
-            if limit_word2vec:
-                self.w2v_model = \
-                    gensim.models.KeyedVectors.load_word2vec_format(
-                        w2v_model_loc, binary=True, limit=limit_word2vec
-                    )
-            else:
-                self.w2v_model = \
-                    gensim.models.KeyedVectors.load_word2vec_format(
-                        w2v_model_loc, binary=True
-                    )
-        except Exception as e:
+        # try:
+        if 'GoogleNews' in w2v_model_loc:
             print(
-                '\n****\nDownload Google News word2vec embeddings from '
-                'https://goo.gl/WdCunP to your /data/ directory, dork!\n****\n'
+                'loading GoogleNews word2vec embeddings, takes a minute...'
             )
-            print(e.message())
-            return None
+        if limit_word2vec:
+            self.w2v_model = \
+                gensim.models.KeyedVectors.load_word2vec_format(
+                    w2v_model_loc, binary=True, limit=limit_word2vec
+                )
+        else:
+            self.w2v_model = \
+                gensim.models.KeyedVectors.load_word2vec_format(
+                    w2v_model_loc, binary=True
+                )
+        # except Exception as e:
+        #     print(
+        #         '\n****\nDownload Google News word2vec embeddings from '
+        #         'https://goo.gl/WdCunP to your /data/ directory, dork!\n****\n'
+        #     )
+        #     # print(e.message())
+        #     return None
 
         self.metaphors = MetaphorData(
             labelled_data_loc, self.w2v_model, train_ratio=train_ratio,
@@ -97,33 +97,56 @@ class ModelRun:
         if not os.path.isdir('modelruns'):
             os.mkdir('modelruns')
 
-    def run(self, n_epochs=20):
+    def run(self,
+            n_epochs=20,
+            rebuild_metaphors=True,
+            early_stopping_limit=10,
+            verbose=True):
+
+        # By default the training and testing data is split for every new run.
+        if rebuild_metaphors:
+            self.metaphors = MetaphorData(
+                self.labelled_data_loc, self.w2v_model,
+                train_ratio=self.train_ratio,
+                validation_ratio=self.validation_ratio
+            )
+            self.train, self.test = self.metaphors.split_train_test()
+
         # Build checkpoint name based on parameters.
         checkpoint_name = os.path.join(
-            'modelruns', self.run_directory, '-'.join(str(n)
-                                                      for n in self.n_hidden)
+            'modelruns', self.run_directory,
+            '-'.join(str(n) for n in self.n_hidden)
         )
-
         checkpoint_name += '-{}'.format(self.train_ratio)
         checkpoint_name += '-{}'.format(self.validation_ratio)
         checkpoint_name += '-{}'.format(self.learning_rate)
-        checkpoint_name += '-{}'.format(self.activation)
+        checkpoint_name += '-{}'.format(self.activation.__name__)
 
-        X, logits = train_network(self.w2v_model, self.train,
-                                  checkpoint_name,
-                                  n_epochs=n_epochs,
-                                  n_hidden=self.n_hidden,
-                                  batch_size=self.batch_size,
-                                  learning_rate=self.learning_rate,
-                                  )
+        # Run nn training.
+        X, probabilities, logits = train_network(
+            self.w2v_model, self.train,
+            checkpoint_name,
+            n_epochs=n_epochs,
+            n_hidden=self.n_hidden,
+            batch_size=self.batch_size,
+            learning_rate=self.learning_rate,
+            early_stopping_limit=early_stopping_limit,
+            verbose=verbose
+        )
 
+        # Standard save and reload, but TODO is it necessary? Seems sess could
+        # be returned as well from train_network.
         saver = tf.train.Saver()
         with tf.Session() as sess:
             saver.restore(sess, checkpoint_name)
-            Z = logits.eval(feed_dict={X: self.test.embedded_sentences})
+            # Z = logits.eval(feed_dict={X: self.test.embedded_sentences})
+            Z, probabilities = sess.run(
+                [logits, probabilities],
+                feed_dict={X: self.test.embedded_sentences}
+            )
             y_pred = np.argmax(Z, axis=1)
 
-        self.test.add_predictions(y_pred)
+        self.test.add_predictions(y_pred, probabilities)
 
         return Eval(self.test)
 

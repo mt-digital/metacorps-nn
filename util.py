@@ -334,5 +334,6 @@ class MetaphorDataTest(MetaphorDataTrain):
         self.word = test_df['word']
         self.test_df = test_df
 
-    def add_predictions(self, predicted_is_metaphor_vec):
+    def add_predictions(self, predicted_is_metaphor_vec, probabilities):
         self.predicted_is_metaphor_vec = predicted_is_metaphor_vec
+        self.probabilities = probabilities
