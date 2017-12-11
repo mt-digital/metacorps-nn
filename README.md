@@ -17,6 +17,22 @@ if necessary.
 
 ## Usage
 
+### On the `MERCED` cluster
+
+The numerical experiments were performed on the MERCED cluster at UC Merced.
+The runner script workflow is at the prototype stage, but working. Here's how
+to use it.
+
+To submit twenty jobs with a learning rate of 0.1
+
+```
+./run-trials.sh 0.1
+```
+
+Here's `run-trials.sh`:
+
+
+
 ### Create and evaluate a model
 
 The `ModelRun` class in `modelrun.py` enables hyperparameter tuning and model
