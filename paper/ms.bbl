@@ -1,0 +1,145 @@
+\begin{thebibliography}{10}
+
+\bibitem{Nunez1999}
+Rafael E~. N{\'{u}}{\~{n}}ez, Laurie D~. Edwards, and Jo{\~{a}}o~Filipe Matos.
+\newblock {Embodied Cognition as Grounding for Situatedness and Context in
+  Mathematics Education}.
+\newblock In {\em Educational Studies in Mathematics}, volume~39, pages 45--65.
+  Kluwer Academic Publishers, Netherlands, 1999.
+
+\bibitem{Núñez2000}
+Rafael~E. N{\'{u}}{\~{n}}ez.
+\newblock {Mathematical Idea Analysis: What Embodied Cognitive Science Can Say
+  about the Human Nature of Mathematics.}
+\newblock In {\em Conference of the International Group for the Psychology of
+  Mathematics Education}, Hiroshima, Japan, 2000.
+
+\bibitem{Alibali2014}
+Martha~W. Alibali, Mitchell~J. Nathan, Matthew~S. Wolfgram, R.~Breckinridge
+  Church, Steven~a. Jacobs, Chelsea {Johnson Martinez}, and Eric~J. Knuth.
+\newblock {How Teachers Link Ideas in Mathematics Instruction Using Speech and
+  Gesture: A Corpus Analysis}.
+\newblock {\em Cognition and Instruction}, 32(1):65--100, 2014.
+
+\bibitem{Gigerenzer2009}
+Gerd Gigerenzer and Henry Brighton.
+\newblock {Homo Heuristicus: Why Biased Minds Make Better Inferences}.
+\newblock {\em Topics in Cognitive Science}, 1(1):107--143, 2009.
+
+\bibitem{Lakoff2014}
+George Lakoff.
+\newblock {Mapping the brain's metaphor circuitry: metaphorical thought in
+  everyday reason.}
+\newblock {\em Frontiers in human neuroscience}, 8(December):958, 2014.
+
+\bibitem{Matlock2012}
+Teenie Matlock.
+\newblock {Framing Political Messages with Grammar and Metaphor}.
+\newblock {\em American Scientist}, 100:478--483, 2012.
+
+\bibitem{Flusberg2017}
+Stephen~J Flusberg, Teenie Matlock, and Paul~H Thibodeau.
+\newblock {Metaphors for the War (or Race) against Climate Change}.
+\newblock {\em Environmental Communication}, 0(0):1--15, 2017.
+
+\bibitem{Kovecses2010}
+Zolt{\'{a}}n K{\"{o}}vecses.
+\newblock {Metaphor, language and culture}.
+\newblock {\em Delta}, 26:739--757, 2010.
+
+\bibitem{Steen2014}
+Gerard~J. Steen, W.~Gudrun Reijnierse, and Christian Burgers.
+\newblock {When do natural language metaphors influence reasoning? A follow-up
+  study to Thibodeau and Boroditsky (2013)}.
+\newblock {\em PLoS ONE}, 9(12):1--25, 2014.
+
+\bibitem{Pew2014}
+{Pew Research Center}.
+\newblock {Political Polarization and Media Habits}.
+\newblock (October), 2014.
+
+\bibitem{King2017}
+Gary King, Benjamin Schneer, and Ariel White.
+\newblock {How the news media activate public expression and influence national
+  agendas}.
+\newblock {\em Science}, 358(November):776--780, 2017.
+
+\bibitem{Turner2018a}
+Matthew~A Turner, Paul~P Maglio, and Teenie Matlock.
+\newblock {Metaphorical Violence in Political Discourse
+  https://osf.io/preprints/socarxiv/t8yg9/}.
+\newblock {\em socArXiV}, 2018.
+
+\bibitem{DoDinh2016}
+Erik-L{\^{a}}n {Do Dinh} and Iryna Gurevych.
+\newblock {Token-Level Metaphor Detection using Neural Networks}.
+\newblock {\em Proceedings of the Fourth Workshop on Metaphor in NLP},
+  (June):28--33, 2016.
+
+\bibitem{Mikolov2013}
+Tomas Mikolov, Ilya Sutskever, Kai Chen, Greg Corrado, and Jeffrey Dean.
+\newblock {Distributed Representations of Words and Phrases and their
+  Compositionality}.
+\newblock In {\em Neural Information Processing Systems}, pages 1--9, 2013.
+
+\bibitem{Mikolov2013a}
+Tomas Mikolov, Kai Chen, Greg Corrado, and Jeffrey Dean.
+\newblock {Efficient Estimation of Word Representations in Vector Space}.
+\newblock Technical report.
+
+\bibitem{Rehurek2010}
+Radim Řehůřek and Petr Sojka.
+\newblock {Software Framework for Topic Modelling with Large Corpora}.
+\newblock In {\em Proceedings of the LREC 2010 Workshop on New Challenges for
+  NLP Frameworks}, pages 45--50, Valletta, Malta, 2010. ELRA.
+
+\bibitem{GoogleResearch2015}
+GoogleResearch.
+\newblock {TensorFlow: Large-scale machine learning on heterogeneous systems}.
+\newblock 2015.
+
+\bibitem{Abadi2016a}
+Mart{\'{i}}n Abadi, Paul Barham, Jianmin Chen, Zhifeng Chen, Andy Davis,
+  Jeffrey Dean, Matthieu Devin, Sanjay Ghemawat, Geoffrey Irving, Michael
+  Isard, Manjunath Kudlur, Josh Levenberg, Rajat Monga, Sherry Moore, Derek~G.
+  Murray, Benoit Steiner, Paul Tucker, Vijay Vasudevan, Pete Warden, Martin
+  Wicke, Yuan Yu, and Xiaoqiang Zheng.
+\newblock {TensorFlow: A system for large-scale machine learning}.
+\newblock 2016.
+
+\bibitem{Pedregosa2011}
+Fabian Pedregosa, Ga{\"{e}}l Varoquaux, Alexandre Gramfort, Vincent Michel,
+  Bertrand Thirion, Olivier Grisel, Mathieu Blondel, Peter Prettenhofer, Ron
+  Weiss, Vincent Dubourg, Jake Vanderplas, Alexandre Passos, David Cournapeau,
+  Matthieu Brucher, Matthieu Perrot, and {\'{E}}douard Duchesnay.
+\newblock {Scikit-learn: Machine Learning in Python}.
+\newblock {\em Journal of Machine Learning Research}, 12(Oct):2825--2830, 2011.
+
+\bibitem{McKinney2013}
+Wes McKinney.
+\newblock {\em {Python for Data Analysis}}.
+\newblock O'Reilly, Sebastopol, CA, 2013.
+
+\bibitem{Wu2013}
+Xiang Zhang, Junbo Zhao, and Yann LeCun.
+\newblock {Character-level Convolutional Networks for Text Classification}.
+\newblock In {\em Advances in Neural Information Processing Systems 28 (NIPS
+  2015)}, 2015.
+
+\bibitem{Sutskever2014}
+Ilya Sutskever, Oriol Vinyals, and Quoc~V. Le.
+\newblock {Sequence to Sequence Learning with Neural Networks}.
+\newblock {\em Nips}, page~9, 2014.
+
+\bibitem{Rei2017}
+Marek Rei, Luana Bulat, Douwe Kiela, and Ekaterina Shutova.
+\newblock {Grasping the Finer Point: A Supervised Similarity Network for
+  Metaphor Detection}.
+\newblock In {\em EMNLP 2017}, 2017.
+
+\bibitem{Dodge2015}
+Ellen Dodge, Jisup Hong, and Elise Stickles.
+\newblock {MetaNet: Deep semantic automatic metaphor analysis}.
+\newblock (1991):40--49, 2015.
+
+\end{thebibliography}

@@ -1,13 +1,12 @@
 '''
-Following Do Dinh, E.-L., & Gurevych, I. (2016) using TensorFlow. Simplified
-in a few respects, but seems to be performing respectably.
+Following Do Dinh, E.-L., & Gurevych, I. (2016) using TensorFlow.
 
 Do Dinh, E.-L., & Gurevych, I. (2016). Token-Level Metaphor
     Detection using Neural Networks. Proceedings of the Fourth Workshop on
     Metaphor in NLP, (June), 28–33.
 
 Author: Matthew A. Turner
-Date: 2017-11-25
+Date: 2017-12-11
 '''
 import tensorflow as tf
 

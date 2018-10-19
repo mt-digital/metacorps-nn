@@ -1,11 +1,11 @@
 first: 
-	pdflatex -shell-escape main.tex
+	xelatex -shell-escape ms.tex
 
 main: first
-	bibtex main && pdflatex -shell-escape main.tex
+	bibtex ms && xelatex -shell-escape ms.tex
 
 omain: main
-	open main.pdf
+	open ms.pdf
 
 clean:
-	rm -f *.aux main.log main.out main.blg main.bbl
+	rm -f *.aux ms.log ms.out ms.blg ms.bbl
