@@ -2,7 +2,7 @@
 
 ## Led by Prof. Harish Bhat
 
-### Authors: Eshita Nandini and Matt Turner
+### Author: Matt Turner
 
 We aim to see how well neural networks can learn to identify 
 metaphor in corpora. Specifically, this system will first be used to identify
